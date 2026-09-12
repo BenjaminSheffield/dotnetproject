@@ -9,6 +9,5 @@ var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
     .Build();
 
-Console.WriteLine("host starting up...");
 
 host.Run();
