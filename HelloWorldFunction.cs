@@ -1,31 +1,34 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 public class HelloWorldFunction
 {
     private readonly IConfiguration _configuration;
+    private readonly ILogger<HelloWorldFunction> _logger;
 
-    public HelloWorldFunction(IConfiguration configuration)
+    public HelloWorldFunction(IConfiguration configuration, ILogger<HelloWorldFunction> logger)
     {
         _configuration = configuration;
+        _logger = logger;
     }
 
     [Function("HelloWorld")]
     public HttpResponseData Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
     {
-        Console.WriteLine("HelloWorld function hit");
+        _logger.LogInformation("HelloWorld function hit");
         var greetingName = _configuration["GREETING_NAME"] ?? "World";
 
-        Console.WriteLine("greeting name from config: " + greetingName);
+        _logger.LogInformation("Greeting name from config: {GreetingName}", greetingName);
 
         var message = "Hello, " + greetingName + "!";
 
         var response = req.CreateResponse(System.Net.HttpStatusCode.OK);
         response.WriteString(message);
 
-        Console.WriteLine("done, sent response");
+        _logger.LogInformation("Done, sent response");
 
         return response;
     }
