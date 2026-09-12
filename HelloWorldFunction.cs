@@ -2,20 +2,21 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
 
-public static class HelloWorldFunction
+public class HelloWorldFunction
 {
+    private readonly IConfiguration _configuration;
+
+    public HelloWorldFunction(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     [Function("HelloWorld")]
-    public static HttpResponseData Run(
+    public HttpResponseData Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
     {
         Console.WriteLine("HelloWorld function hit");
-
-        var config = new ConfigurationBuilder()
-            .AddJsonFile("local.settings.json", optional: true)
-            .AddEnvironmentVariables()
-            .Build();
-
-        var greetingName = config["GREETING_NAME"] ?? "World";
+        var greetingName = _configuration["GREETING_NAME"] ?? "World";
 
         Console.WriteLine("greeting name from config: " + greetingName);
 
