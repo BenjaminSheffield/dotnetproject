@@ -10,7 +10,6 @@ public static class HelloWorldFunction
     {
         Console.WriteLine("HelloWorld function hit");
 
-        // just build the config right here, who needs IOptions
         var config = new ConfigurationBuilder()
             .AddJsonFile("local.settings.json", optional: true)
             .AddEnvironmentVariables()
